@@ -1,10 +1,12 @@
 /**
  * Dynamic legend component for video results showing class colors
+ * Matches the premium dark glassmorphic style of Legend
  */
 'use client';
 
 import { Card } from '@/components/ui/card';
 import { ClassInfo } from '@/lib/types';
+import { Palette } from 'lucide-react';
 
 interface VideoLegendProps {
   classes?: ClassInfo[];
@@ -21,23 +23,29 @@ export function VideoLegend({ classes }: VideoLegendProps) {
 
   return (
     <Card className="overflow-hidden mt-4 glass-card border-white/[0.06]">
-      <div className="p-4">
-        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Color Legend</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+      <div className="p-4 space-y-3">
+        <div className="flex items-center gap-2">
+          <Palette className="h-3.5 w-3.5 text-primary" />
+          <h3 className="text-xs font-bold text-foreground/80 uppercase tracking-wider">Color Legend</h3>
+        </div>
+        <div className="grid grid-cols-3 gap-2">
           {displayClasses.map((classInfo) => (
             <div
               key={classInfo.id}
-              className="flex items-center gap-2 p-2.5 rounded-lg border border-white/[0.06] bg-white/[0.03] hover:border-primary/25 transition-all duration-300"
+              className="flex items-center gap-2.5 p-2.5 rounded-lg border border-white/[0.06] bg-white/[0.03] hover:border-white/[0.12] transition-all duration-300"
             >
-              <div
-                className="w-4 h-4 rounded shrink-0 shadow-[0_0_8px_var(--chip-color)]"
-                style={{ backgroundColor: classInfo.color, '--chip-color': classInfo.color + '60' } as React.CSSProperties}
-              />
-              <div className="flex-1 min-w-0">
-                <div className="text-xs font-medium capitalize truncate">
-                  {classInfo.name.replace('_', ' ')}
-                </div>
+              <div className="relative shrink-0">
+                <div
+                  className="w-4 h-4 rounded-md"
+                  style={{
+                    backgroundColor: classInfo.color,
+                    boxShadow: `0 0 10px ${classInfo.color}50`,
+                  }}
+                />
               </div>
+              <span className="text-xs font-semibold capitalize truncate text-foreground/90">
+                {classInfo.name.replace('_', ' ')}
+              </span>
             </div>
           ))}
         </div>

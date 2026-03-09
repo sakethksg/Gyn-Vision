@@ -5,15 +5,15 @@ import numpy as np
 
 # 4-class model (original)
 CLASS_METADATA_4 = [
-    {"id": 0, "name": "background", "color": "transparent"},   # Transparent
-    {"id": 1, "name": "uterus", "color": "#4A90D9"},           # Soft blue
+    {"id": 0, "name": "background", "color": "#C8543A"},       # Warm rose-red
+    {"id": 1, "name": "uterus", "color": "#1A5FA8"},           # Dark blue
     {"id": 2, "name": "fallopian_tube", "color": "#3BB38A"},   # Soft teal
     {"id": 3, "name": "ovary", "color": "#9B72D0"}             # Soft lavender
 ]
 
 COLOR_MAP_4 = {
-    0: (0, 0, 0, 0),         # Transparent - background
-    1: (74, 144, 217, 220),   # Soft blue - uterus
+    0: (200, 84, 58, 160),    # Warm rose-red (semi-transparent) - background
+    1: (26, 95, 168, 230),    # Dark blue - uterus
     2: (59, 179, 138, 220),   # Soft teal - fallopian tube
     3: (155, 114, 208, 220)   # Soft lavender - ovary
 }
