@@ -82,7 +82,7 @@ export function FileUpload({ mode, onFileSelect, disabled = false }: FileUploadP
 
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium">Upload {mode === 'image' ? 'Image' : 'Video'}</label>
+      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Upload {mode === 'image' ? 'Image' : 'Video'}</label>
       
       <Card
         className={`
@@ -97,12 +97,12 @@ export function FileUpload({ mode, onFileSelect, disabled = false }: FileUploadP
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <div className="p-8">
+        <div className="p-4">
           {selectedFile ? (
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
-                  <File className="h-5 w-5 text-primary" />
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 rounded-lg bg-primary/10 border border-primary/20">
+                  <File className="h-4 w-4 text-primary" />
                 </div>
                 <div>
                   <p className="font-medium text-sm">{selectedFile.name}</p>
@@ -122,15 +122,15 @@ export function FileUpload({ mode, onFileSelect, disabled = false }: FileUploadP
               </Button>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-3 text-center">
-              <div className="p-3 rounded-full bg-primary/10 border border-primary/15">
-                <Upload className="h-8 w-8 text-primary/70" />
+            <div className="flex flex-col items-center gap-2 text-center">
+              <div className="p-2 rounded-full bg-primary/10 border border-primary/15">
+                <Upload className="h-5 w-5 text-primary/70" />
               </div>
               <div>
-                <p className="text-sm font-medium">
+                <p className="text-xs font-medium">
                   Drop {mode} file here or click to browse
                 </p>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-[11px] text-muted-foreground mt-0.5">
                   Accepts {acceptedTypes}
                 </p>
               </div>

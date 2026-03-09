@@ -12,6 +12,7 @@ import { VideoResults } from '@/components/VideoResults';
 import { StreamingVideoResults } from '@/components/StreamingVideoResults';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
 import { Loader2, AlertCircle, Upload, ArrowLeft } from 'lucide-react';
 
 export default function SegmentationPage() {
@@ -196,7 +197,7 @@ export default function SegmentationPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Left Panel - Controls */}
           <div className="lg:col-span-1">
-            <Card className="p-5 space-y-6 sticky top-4 glass-panel relative overflow-hidden">
+            <Card className="p-5 space-y-6 sticky top-4 glass-panel relative overflow-y-auto max-h-[calc(100vh-6rem)]">
               {/* Subtle top highlight */}
               <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent" />
 
@@ -275,12 +276,11 @@ export default function SegmentationPage() {
                     <div className="space-y-2">
                       <div className="flex items-center gap-3">
                         <span className="text-xs text-muted-foreground">Custom:</span>
-                        <input
-                          type="range"
-                          min="1"
-                          max="30"
-                          value={sampleRate}
-                          onChange={(e) => setSampleRate(Number(e.target.value))}
+                        <Slider
+                          min={1}
+                          max={30}
+                          value={[sampleRate]}
+                          onValueChange={(val) => setSampleRate(val[0])}
                           disabled={loading}
                           className="flex-1"
                         />

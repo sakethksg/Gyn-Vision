@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { ImageResult } from '@/lib/types';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
 import { Legend } from './Legend';
 import { ZoomIn, ZoomOut, Download, Layers } from 'lucide-react';
 
@@ -41,7 +42,7 @@ export function ImageResults({ result, modelName }: ImageResultsProps) {
       {/* Main Interactive Canvas */}
       <Card className="overflow-hidden glass-card border-white/[0.08] shadow-[0_8px_40px_oklch(0_0_0_/_0.3)]">
         {/* Viewer Area */}
-        <div className="relative w-full bg-black overflow-hidden" style={{ aspectRatio: '720 / 480' }}>
+        <div className="relative w-full bg-black overflow-hidden" style={{ aspectRatio: '16 / 10' }}>
           <div
             className="absolute inset-0 transition-transform duration-200 ease-out"
             style={{ transform: `scale(${scale})`, transformOrigin: 'center center' }}
@@ -49,12 +50,12 @@ export function ImageResults({ result, modelName }: ImageResultsProps) {
             <img
               src={result.original_image}
               alt="Original Surgical Feed"
-              className="absolute inset-0 w-full h-full object-fill"
+              className="absolute inset-0 w-full h-full object-contain"
             />
             <img
               src={result.mask_image}
               alt="AI Segmentation Mask"
-              className="absolute inset-0 w-full h-full object-fill transition-opacity duration-200 ease-in-out"
+              className="absolute inset-0 w-full h-full object-contain transition-opacity duration-200 ease-in-out"
               style={{ opacity: showMask ? opacity / 100 : 0 }}
             />
           </div>
@@ -114,12 +115,11 @@ export function ImageResults({ result, modelName }: ImageResultsProps) {
             <Layers className="h-4 w-4 text-muted-foreground" />
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Mask Opacity</span>
           </div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={opacity}
-            onChange={(e) => setOpacity(Number(e.target.value))}
+          <Slider
+            min={0}
+            max={100}
+            value={[opacity]}
+            onValueChange={(val) => setOpacity(val[0])}
             className="flex-1"
             disabled={!showMask}
           />

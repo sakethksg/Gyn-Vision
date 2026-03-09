@@ -5,51 +5,51 @@ import numpy as np
 
 # 4-class model (original)
 CLASS_METADATA_4 = [
-    {"id": 0, "name": "background", "color": "#FF0000"},       # Red
-    {"id": 1, "name": "uterus", "color": "#0000FF"},           # Blue
-    {"id": 2, "name": "fallopian_tube", "color": "#00FF00"},   # Green
-    {"id": 3, "name": "ovary", "color": "#A020F0"}             # Purple
+    {"id": 0, "name": "background", "color": "transparent"},   # Transparent
+    {"id": 1, "name": "uterus", "color": "#4A90D9"},           # Soft blue
+    {"id": 2, "name": "fallopian_tube", "color": "#3BB38A"},   # Soft teal
+    {"id": 3, "name": "ovary", "color": "#9B72D0"}             # Soft lavender
 ]
 
 COLOR_MAP_4 = {
-    0: (255, 0, 0),      # Red - background
-    1: (0, 0, 255),      # Blue - uterus
-    2: (0, 255, 0),      # Green - fallopian tube
-    3: (160, 32, 240)    # Purple - ovary
+    0: (0, 0, 0, 0),         # Transparent - background
+    1: (74, 144, 217, 220),   # Soft blue - uterus
+    2: (59, 179, 138, 220),   # Soft teal - fallopian tube
+    3: (155, 114, 208, 220)   # Soft lavender - ovary
 }
 
 # 8-class model (round 2)
 CLASS_METADATA_8 = [
-    {"id": 0, "name": "background", "color": "#000000"},               # Black
-    {"id": 1, "name": "External Iliac Artery", "color": "#FF0000"},    # Red
-    {"id": 2, "name": "External Iliac Vein", "color": "#0000FF"},      # Blue
-    {"id": 3, "name": "Obturator Nerve", "color": "#00FF00"},          # Green
-    {"id": 4, "name": "Ovary", "color": "#FFFF00"},                    # Yellow
-    {"id": 5, "name": "Ureter", "color": "#FF00FF"},                   # Magenta
-    {"id": 6, "name": "Uterine Artery", "color": "#00FFFF"},           # Cyan
-    {"id": 7, "name": "Uterus", "color": "#A020F0"}                    # Purple
+    {"id": 0, "name": "background", "color": "transparent"},               # Transparent
+    {"id": 1, "name": "External Iliac Artery", "color": "#E05C5C"},    # Soft rose red
+    {"id": 2, "name": "External Iliac Vein", "color": "#5B8AD4"},      # Soft blue
+    {"id": 3, "name": "Obturator Nerve", "color": "#3BB38A"},          # Soft teal
+    {"id": 4, "name": "Ovary", "color": "#E8A94A"},                    # Soft amber
+    {"id": 5, "name": "Ureter", "color": "#E07AB8"},                   # Soft pink
+    {"id": 6, "name": "Uterine Artery", "color": "#4AC5D9"},           # Soft cyan
+    {"id": 7, "name": "Uterus", "color": "#9B72D0"}                    # Soft lavender
 ]
 
 COLOR_MAP_8 = {
-    0: (0, 0, 0),        # Black - background
-    1: (255, 0, 0),      # Red - External Iliac Artery
-    2: (0, 0, 255),      # Blue - External Iliac Vein
-    3: (0, 255, 0),      # Green - Obturator Nerve
-    4: (255, 255, 0),    # Yellow - Ovary
-    5: (255, 0, 255),    # Magenta - Ureter
-    6: (0, 255, 255),    # Cyan - Uterine Artery
-    7: (160, 32, 240)    # Purple - Uterus
+    0: (0, 0, 0, 0),           # Transparent - background
+    1: (224, 92, 92, 220),     # Soft rose red - External Iliac Artery
+    2: (91, 138, 212, 220),    # Soft blue - External Iliac Vein
+    3: (59, 179, 138, 220),    # Soft teal - Obturator Nerve
+    4: (232, 169, 74, 220),    # Soft amber - Ovary
+    5: (224, 122, 184, 220),   # Soft pink - Ureter
+    6: (74, 197, 217, 220),    # Soft cyan - Uterine Artery
+    7: (155, 114, 208, 220)    # Soft lavender - Uterus
 }
 
 # 2-class model (b1_med)
 CLASS_METADATA_2 = [
-    {"id": 0, "name": "background", "color": "#000000"},       # Black
-    {"id": 1, "name": "tissue", "color": "#FF0000"}            # Red
+    {"id": 0, "name": "background", "color": "transparent"},   # Transparent
+    {"id": 1, "name": "tissue", "color": "#E05C5C"}            # Soft rose red
 ]
 
 COLOR_MAP_2 = {
-    0: (0, 0, 0),        # Black - background
-    1: (255, 0, 0)       # Red - tissue
+    0: (0, 0, 0, 0),         # Transparent - background
+    1: (224, 92, 92, 220)    # Soft rose red - tissue
 }
 
 # Default (backwards compatibility)

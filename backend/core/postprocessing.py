@@ -115,21 +115,25 @@ def generate_mask(logits, original_size: Tuple[int, int] = None, model_type: str
 
 def mask_to_color(mask: np.ndarray, num_classes: int = 4) -> np.ndarray:
     """
-    Convert class ID mask to RGB color mask.
+    Convert class ID mask to RGBA color mask with transparent background.
     
     Args:
         mask: Class ID array (H, W)
         num_classes: Number of classes in the model
         
     Returns:
-        RGB color mask (H, W, 3)
+        RGBA color mask (H, W, 4) with transparent background
     """
     h, w = mask.shape
-    color_mask = np.zeros((h, w, 3), dtype=np.uint8)
+    color_mask = np.zeros((h, w, 4), dtype=np.uint8)
     
     color_map = get_color_map(num_classes)
     for class_id, color in color_map.items():
-        color_mask[mask == class_id] = color
+        if len(color) == 4:
+            color_mask[mask == class_id] = color
+        else:
+            # Fallback: fully opaque for legacy 3-channel entries
+            color_mask[mask == class_id] = (*color, 255)
     
     return color_mask
 
@@ -163,10 +167,21 @@ def create_overlay(
     
     # Blend only where mask > 0 (not background)
     non_background = mask > 0
-    overlay[non_background] = (
-        (1 - alpha) * orig_array[non_background] +
-        alpha * color_mask[non_background]
-    ).astype(np.uint8)
+    # Extract RGB from RGBA color mask for blending
+    color_rgb = color_mask[:, :, :3] if color_mask.ndim == 3 and color_mask.shape[2] == 4 else color_mask
+    if color_mask.ndim == 3 and color_mask.shape[2] == 4:
+        color_rgb = color_mask[:, :, :3]
+        # Use per-pixel alpha for smoother blending
+        alpha_channel = color_mask[:, :, 3:4].astype(np.float32) / 255.0
+        overlay[non_background] = (
+            (1 - alpha_channel[non_background]) * orig_array[non_background] +
+            alpha_channel[non_background] * color_rgb[non_background]
+        ).astype(np.uint8)
+    else:
+        overlay[non_background] = (
+            (1 - alpha) * orig_array[non_background] +
+            alpha * color_mask[non_background]
+        ).astype(np.uint8)
     
     return Image.fromarray(overlay)
 
@@ -252,8 +267,8 @@ def process_segmentation_result(
     # Calculate statistics
     stats = calculate_statistics(mask, num_classes)
     
-    # Convert to PIL Images for encoding
-    mask_image = Image.fromarray(color_mask)
+    # Convert to PIL Images for encoding (RGBA preserves transparency)
+    mask_image = Image.fromarray(color_mask, mode='RGBA')
     
     return {
         'mask': mask,
