@@ -10,10 +10,9 @@ import { FileUpload } from '@/components/FileUpload';
 import { ImageResults } from '@/components/ImageResults';
 import { VideoResults } from '@/components/VideoResults';
 import { StreamingVideoResults } from '@/components/StreamingVideoResults';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { Loader2, AlertCircle, Upload, ArrowLeft } from 'lucide-react';
+import { Loader2, Upload, ArrowLeft } from 'lucide-react';
 
 export default function SegmentationPage() {
   const [models, setModels] = useState<Model[]>([]);
@@ -168,26 +167,25 @@ export default function SegmentationPage() {
   const selectedModel = models.find(m => m.id === selectedModelId);
 
   return (
-    <div className="min-h-screen bg-background relative">
-      {/* Subtle background glow */}
+    <div className="min-h-screen bg-[#080608] relative">
+      {/* Subtle purple glow top-right */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-primary/5 blur-[150px] rounded-full" />
-        <div className="absolute bottom-1/4 left-0 w-[300px] h-[300px] bg-[oklch(0.55_0.18_310_/_0.05)] blur-[120px] rounded-full" />
+        <div className="absolute -top-20 -right-20 w-[500px] h-[500px] bg-purple-700/10 blur-[160px] rounded-full" />
       </div>
 
       {/* Header */}
-      <header className="border-b border-white/[0.06] glass">
+      <header className="border-b border-white/[0.06] bg-[#080608]/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex items-center gap-4">
           <Link href="/">
-            <Button variant="ghost" size="sm" className="gap-2 hover:bg-white/[0.06]">
+            <Button variant="ghost" size="sm" className="gap-2 text-white/60 hover:text-white hover:bg-white/[0.06]">
               <ArrowLeft className="h-4 w-4" />
               Back
             </Button>
           </Link>
-          <div className="border-l border-white/[0.1] h-8 mx-2" />
+          <div className="border-l border-white/[0.08] h-6 mx-1" />
           <div>
-            <h1 className="text-lg font-bold">Segmentation Tool</h1>
-            <p className="text-xs text-muted-foreground">Upload and analyze laparoscopic images or videos</p>
+            <h1 className="text-base font-bold text-white">Segmentation Tool</h1>
+            <p className="text-xs text-white/40">Upload and analyze laparoscopic images or videos</p>
           </div>
         </div>
       </header>
@@ -197,19 +195,16 @@ export default function SegmentationPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Left Panel - Controls */}
           <div className="lg:col-span-1">
-            <Card className="p-5 space-y-6 sticky top-4 glass-panel relative overflow-y-auto max-h-[calc(100vh-6rem)]">
-              {/* Subtle top highlight */}
-              <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent" />
-
+            <div className="p-5 space-y-6 sticky top-20 rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-y-auto max-h-[calc(100vh-7rem)]">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold tracking-wide uppercase text-foreground/80">Configuration</h3>
+                <h3 className="text-xs font-semibold tracking-widest uppercase text-white/40">Configuration</h3>
                 {error && (
                   <div className="group relative flex flex-col items-center">
                     <div className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75" />
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive" />
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
                     </div>
-                    <div className="absolute top-full mt-2 right-0 w-48 p-2 bg-destructive text-destructive-foreground text-xs rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                    <div className="absolute top-full mt-2 right-0 w-48 p-2 bg-red-500/20 border border-red-500/30 text-red-300 text-xs rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
                       {error}
                     </div>
                   </div>
@@ -217,7 +212,7 @@ export default function SegmentationPage() {
               </div>
                 
               <div className="space-y-6">
-                <div className="space-y-5 bg-white/[0.03] p-4 rounded-xl border border-white/[0.06] shadow-inner">
+                <div className="space-y-5 bg-white/[0.02] p-4 rounded-xl border border-white/[0.05]">
                   <ModelSelector
                     models={models}
                     selectedId={selectedModelId}
@@ -235,64 +230,44 @@ export default function SegmentationPage() {
                 {/* Video Sample Rate Slider */}
                 {mode === 'video' && (
                   <div className="space-y-3">
-                    <label className="text-xs font-medium">Processing Speed</label>
+                    <label className="text-xs font-semibold tracking-widest uppercase text-white/40">Processing Speed</label>
                     
                     <div className="grid grid-cols-3 gap-2">
-                      <Button
-                        type="button"
-                        variant={sampleRate === 30 ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSampleRate(30)}
-                        disabled={loading}
-                        className={`text-xs h-8 ${sampleRate === 30 ? 'glow-cyan' : 'border-white/10'}`}
-                      >
-                        Fast
-                        <span className="text-[10px] ml-1 opacity-70">(1fps)</span>
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={sampleRate === 15 ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSampleRate(15)}
-                        disabled={loading}
-                        className={`text-xs h-8 ${sampleRate === 15 ? 'glow-cyan' : 'border-white/10'}`}
-                      >
-                        Balanced
-                        <span className="text-[10px] ml-1 opacity-70">(2fps)</span>
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={sampleRate === 5 ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSampleRate(5)}
-                        disabled={loading}
-                        className={`text-xs h-8 ${sampleRate === 5 ? 'glow-cyan' : 'border-white/10'}`}
-                      >
-                        Quality
-                        <span className="text-[10px] ml-1 opacity-70">(6fps)</span>
-                      </Button>
+                      {([{val:30,label:'Fast',fps:'1fps'},{val:15,label:'Balanced',fps:'2fps'},{val:5,label:'Quality',fps:'6fps'}] as const).map(({val,label,fps}) => (
+                        <button
+                          key={val}
+                          type="button"
+                          onClick={() => setSampleRate(val)}
+                          disabled={loading}
+                          className={`text-xs h-8 rounded-lg border transition-all duration-150 font-medium ${
+                            sampleRate === val
+                              ? 'bg-white/[0.12] border-white/[0.20] text-white'
+                              : 'bg-transparent border-white/[0.06] text-white/40 hover:text-white/70 hover:border-white/[0.12]'
+                          } ${loading ? 'opacity-40 cursor-not-allowed' : ''}`}
+                        >
+                          {label}<br />
+                          <span className="text-[9px] opacity-60">{fps}</span>
+                        </button>
+                      ))}
                     </div>
 
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-muted-foreground">Custom:</span>
-                        <Slider
-                          min={1}
-                          max={30}
-                          value={[sampleRate]}
-                          onValueChange={(val) => setSampleRate(val[0])}
-                          disabled={loading}
-                          className="flex-1"
-                        />
-                        <span className="text-xs font-medium min-w-[60px]">
-                          ~{sampleRate}x faster
-                        </span>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        Processing every {sampleRate === 1 ? '' : `${sampleRate}${sampleRate === 2 ? 'nd' : sampleRate === 3 ? 'rd' : 'th'} `}frame{sampleRate === 1 ? '' : 's'} 
-                        {' '}({Math.round(30 / sampleRate)} frames/sec at 30fps input)
-                      </p>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-white/35 shrink-0">Custom:</span>
+                      <Slider
+                        min={1}
+                        max={30}
+                        value={[sampleRate]}
+                        onValueChange={(val) => setSampleRate(val[0])}
+                        disabled={loading}
+                        className="flex-1"
+                      />
+                      <span className="text-xs font-medium text-white/60 min-w-[52px] text-right">
+                        ~{sampleRate}x
+                      </span>
                     </div>
+                    <p className="text-[11px] text-white/25">
+                      {Math.round(30 / sampleRate)} fps at 30fps input
+                    </p>
                   </div>
                 )}
 
@@ -303,14 +278,14 @@ export default function SegmentationPage() {
                 />
 
                 <Button
-                  className="w-full bg-linear-to-r from-primary to-[oklch(0.60_0.17_240)] hover:from-primary/90 hover:to-[oklch(0.55_0.17_240)] text-primary-foreground rounded-xl h-12 text-base font-medium glow-cyan transition-all duration-300 hover:shadow-[0_0_30px_oklch(0.72_0.19_220_/_0.3)]"
+                  className="w-full bg-white text-black hover:bg-white/90 rounded-full h-11 text-sm font-semibold transition-all duration-200 shadow-[0_0_24px_rgba(255,255,255,0.12)] disabled:opacity-40 disabled:shadow-none"
                   size="lg"
                   onClick={handleSegment}
                   disabled={!selectedFile || loading}
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Processing...
                     </>
                   ) : (
@@ -318,7 +293,7 @@ export default function SegmentationPage() {
                   )}
                 </Button>
               </div>
-            </Card>
+            </div>
           </div>
 
           {/* Right Panel - Results */}
@@ -345,26 +320,17 @@ export default function SegmentationPage() {
                 classes={videoClasses}
               />
             ) : (
-              <Card className="relative flex flex-col items-center justify-center text-center min-h-[600px] glass-card border-white/[0.06] rounded-2xl transition-all duration-500 hover:border-primary/20 hover:shadow-[0_0_40px_oklch(0.72_0.19_220_/_0.08)] overflow-hidden">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(1_0_0_/_0.02)_1px,transparent_1px),linear-gradient(to_bottom,oklch(1_0_0_/_0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none opacity-50" />
-                <div className="z-10 flex flex-col items-center max-w-sm px-6">
-                  <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mb-6 relative">
-                    <div className="absolute inset-0 rounded-full bg-primary/15 animate-ping opacity-20" />
-                    <div className="absolute inset-[-4px] rounded-full border border-primary/20 animate-glow-pulse" />
-                    <Upload className="h-10 w-10 text-primary" />
+              <div className="relative flex flex-col items-center justify-center text-center min-h-[580px] rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+                <div className="flex flex-col items-center max-w-sm px-6">
+                  <div className="w-16 h-16 rounded-2xl border border-white/[0.08] bg-white/[0.04] flex items-center justify-center mb-5">
+                    <Upload className="h-7 w-7 text-white/30" />
                   </div>
-                  <h3 className="text-2xl font-bold mb-3 text-foreground tracking-tight">Workspace Ready</h3>
-                  <p className="text-muted-foreground mb-8 text-balance">
-                    Upload your surgical {mode === 'image' ? 'image' : 'video'} to begin AI segmentation analysis.
+                  <h3 className="text-lg font-bold mb-2 text-white">Workspace Ready</h3>
+                  <p className="text-sm text-white/35 text-balance leading-relaxed">
+                    Upload a surgical {mode === 'image' ? 'image' : 'video'} using the panel on the left to begin AI segmentation.
                   </p>
-                  
-                  <div className="w-full max-w-[200px]">
-                    <Button variant="outline" className="w-full glass border-white/10 pointer-events-none opacity-50 font-medium pt-2 pb-2">
-                      Try Demo {mode === 'image' ? 'Image' : 'Video'}
-                    </Button>
-                  </div>
                 </div>
-              </Card>
+              </div>
             )}
           </div>
         </div>

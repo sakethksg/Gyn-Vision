@@ -58,13 +58,13 @@ export function Legend({ classes, showStats = true }: LegendProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Activity className="h-4 w-4 text-primary" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-foreground/80">
+          <Activity className="h-4 w-4 text-white/30" />
+          <h3 className="text-xs font-bold uppercase tracking-wider text-white/40">
             Segmentation Analysis
           </h3>
         </div>
         {showStats && (
-          <span className="text-[10px] font-semibold text-muted-foreground px-2 py-0.5 rounded-full border border-white/[0.06] bg-white/[0.03]">
+          <span className="text-[10px] font-semibold text-white/30 px-2 py-0.5 rounded-full border border-white/[0.06] bg-white/[0.02]">
             {displayClasses.filter(c => c.present !== false && (c.area_percent || 0) > 0).length} / {displayClasses.length} detected
           </span>
         )}
@@ -118,12 +118,12 @@ export function Legend({ classes, showStats = true }: LegendProps) {
                         boxShadow: isPresent ? `0 0 8px ${classInfo.color}70` : 'none',
                       }}
                     />
-                    <span className="text-xs font-semibold capitalize truncate text-foreground/90">
+                    <span className="text-xs font-semibold capitalize truncate text-white/80">
                       {classInfo.name.replace('_', ' ')}
                     </span>
                   </div>
                   {showStats && (
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="text-[10px] text-white/35">
                       {isPresent ? `${percent.toFixed(1)}% coverage` : 'Not detected'}
                     </span>
                   )}

@@ -3,7 +3,6 @@
  */
 'use client';
 
-import { Card } from '@/components/ui/card';
 import { Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { VideoLegend } from './VideoLegend';
@@ -28,9 +27,9 @@ export function VideoResults({ videoUrl, modelName, classes }: VideoResultsProps
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold">Video Results</h2>
+          <h2 className="text-base font-bold text-white">Video Results</h2>
           {modelName && (
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-xs text-white/40 mt-0.5">
               {modelName}
             </p>
           )}
@@ -39,7 +38,7 @@ export function VideoResults({ videoUrl, modelName, classes }: VideoResultsProps
           onClick={handleDownload}
           variant="outline"
           size="sm"
-          className="h-8 text-xs border-white/10 hover:border-primary/30 hover:bg-primary/5 transition-all duration-300"
+          className="h-8 text-xs border-white/[0.08] hover:border-white/[0.15] hover:bg-white/[0.05] text-white/50 hover:text-white transition-all duration-200"
         >
           <Download className="h-3 w-3 mr-1" />
           Download
@@ -47,9 +46,9 @@ export function VideoResults({ videoUrl, modelName, classes }: VideoResultsProps
       </div>
 
       {/* Video Player */}
-      <Card className="overflow-hidden glass-card border-white/[0.06]">
+      <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-black">
         <div className="p-4">
-          <div className="relative w-full rounded-lg overflow-hidden bg-black border border-white/[0.04]">
+          <div className="relative w-full rounded-xl overflow-hidden bg-black border border-white/[0.04]">
             <video
               src={videoUrl}
               controls
@@ -60,7 +59,7 @@ export function VideoResults({ videoUrl, modelName, classes }: VideoResultsProps
             </video>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Legend */}
       <VideoLegend classes={classes} />

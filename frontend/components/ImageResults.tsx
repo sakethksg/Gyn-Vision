@@ -29,10 +29,10 @@ export function ImageResults({ result, modelName }: ImageResultsProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold tracking-tight">Segmentation Results</h2>
+          <h2 className="text-base font-bold tracking-tight text-white">Segmentation Results</h2>
           {modelName && (
-            <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-success animate-pulse shadow-[0_0_8px_oklch(0.68_0.18_155_/_0.5)]" />
+            <p className="text-xs text-white/40 mt-0.5 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
               {modelName} active
             </p>
           )}
@@ -40,7 +40,7 @@ export function ImageResults({ result, modelName }: ImageResultsProps) {
       </div>
 
       {/* Main Interactive Canvas */}
-      <Card className="overflow-hidden glass-card border-white/[0.08] shadow-[0_8px_40px_oklch(0_0_0_/_0.3)]">
+      <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-black shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
         {/* Viewer Area */}
         <div className="relative w-full bg-black overflow-hidden" style={{ aspectRatio: '16 / 10' }}>
           <div
@@ -63,7 +63,7 @@ export function ImageResults({ result, modelName }: ImageResultsProps) {
           {/* Toolbar */}
           <div className="absolute top-3 right-3 z-20 flex flex-col gap-1 p-1.5 rounded-xl border border-white/[0.08] shadow-lg"
             style={{
-              background: 'oklch(0.13 0.02 260 / 0.7)',
+              background: 'rgba(8,6,8,0.75)',
               backdropFilter: 'blur(16px) saturate(1.4)',
             }}
           >
@@ -84,7 +84,7 @@ export function ImageResults({ result, modelName }: ImageResultsProps) {
             <div className="h-px bg-white/10 w-full my-0.5" />
             <Button
               variant="ghost" size="icon"
-              className={`h-8 w-8 rounded-lg hover:bg-white/10 ${showMask ? 'text-primary drop-shadow-[0_0_6px_oklch(0.72_0.19_220_/_0.5)]' : 'text-white/40'}`}
+              className={`h-8 w-8 rounded-lg hover:bg-white/10 ${showMask ? 'text-white' : 'text-white/30'}`}
               onClick={() => setShowMask(!showMask)} title="Toggle AI Layer"
             >
               <Layers className="h-4 w-4" />
@@ -107,13 +107,13 @@ export function ImageResults({ result, modelName }: ImageResultsProps) {
         {/* Opacity Slider Bar */}
         <div className="px-5 py-3 flex items-center gap-4 border-t border-white/[0.06]"
           style={{
-            background: 'oklch(0.14 0.02 260 / 0.6)',
+            background: 'rgba(8,6,8,0.7)',
             backdropFilter: 'blur(20px)',
           }}
         >
           <div className="flex items-center gap-2 shrink-0">
-            <Layers className="h-4 w-4 text-muted-foreground" />
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Mask Opacity</span>
+            <Layers className="h-4 w-4 text-white/30" />
+            <span className="text-xs font-semibold text-white/35 uppercase tracking-wider">Opacity</span>
           </div>
           <Slider
             min={0}
@@ -123,14 +123,14 @@ export function ImageResults({ result, modelName }: ImageResultsProps) {
             className="flex-1"
             disabled={!showMask}
           />
-          <span className="text-sm font-bold min-w-[36px] text-right tabular-nums text-primary">{opacity}%</span>
+          <span className="text-sm font-bold min-w-[36px] text-right tabular-nums text-white/60">{opacity}%</span>
         </div>
-      </Card>
+      </div>
 
       {/* Legend */}
-      <Card className="glass-card border-white/[0.06] p-4">
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
         <Legend classes={result.classes} showStats={true} />
-      </Card>
+      </div>
     </div>
   );
 }

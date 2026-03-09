@@ -4,7 +4,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { VideoLegend } from './VideoLegend';
 import { ClassInfo } from '@/lib/types';
@@ -78,17 +77,17 @@ export function StreamingVideoResults({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold">Real-Time Video Segmentation</h2>
+          <h2 className="text-base font-bold text-white">Real-Time Video Segmentation</h2>
           {modelName && (
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-xs text-white/40 mt-0.5">
               {modelName}
             </p>
           )}
         </div>
         <div className="flex items-center gap-2">
           {isStreaming && (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Loader2 className="h-3 w-3 animate-spin text-primary" />
+            <div className="flex items-center gap-2 text-xs text-white/40">
+              <Loader2 className="h-3 w-3 animate-spin" />
               <span>Processing...</span>
             </div>
           )}
@@ -97,7 +96,7 @@ export function StreamingVideoResults({
               onClick={onClear}
               variant="outline"
               size="sm"
-              className="h-8 text-xs border-white/10 hover:border-white/20 hover:bg-white/[0.06]"
+              className="h-8 text-xs border-white/[0.08] hover:border-white/[0.15] hover:bg-white/[0.05] text-white/50 hover:text-white"
             >
               <X className="h-3 w-3 mr-1" />
               Clear
@@ -109,17 +108,16 @@ export function StreamingVideoResults({
       {/* Progress Bar */}
       {isStreaming && (
         <div className="space-y-1.5">
-          <div className="flex justify-between text-xs text-muted-foreground">
+          <div className="flex justify-between text-xs text-white/35">
             <span>Frame {currentFrame} of {totalFrames}</span>
-            <span className="text-primary font-medium">{progress.toFixed(1)}%</span>
+            <span className="text-white/60 font-medium">{progress.toFixed(1)}%</span>
           </div>
-          <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+          <div className="h-1 bg-white/[0.06] rounded-full overflow-hidden">
             <div 
               className="h-full rounded-full transition-all duration-300 ease-out"
               style={{ 
                 width: `${progress}%`,
-                background: 'linear-gradient(90deg, oklch(0.72 0.19 220), oklch(0.65 0.17 240))',
-                boxShadow: '0 0 12px oklch(0.72 0.19 220 / 0.4)',
+                background: 'rgba(255,255,255,0.5)',
               }}
             />
           </div>
@@ -127,31 +125,31 @@ export function StreamingVideoResults({
       )}
 
       {/* Video Canvas */}
-      <Card className="overflow-hidden glass-card border-white/[0.06]">
+      <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-black">
         <div className="p-4">
-          <div className="relative w-full rounded-lg overflow-hidden bg-black flex items-center justify-center border border-white/[0.04]">
+          <div className="relative w-full rounded-xl overflow-hidden bg-black flex items-center justify-center border border-white/[0.04]">
             <canvas
               ref={canvasRef}
               className="max-w-full h-auto"
               style={{ maxHeight: '65vh' }}
             />
             {!dimensions && (
-              <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+              <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
-                  <Loader2 className="h-12 w-12 mx-auto mb-2 animate-spin text-primary/50" />
-                  <p className="text-sm">Waiting for video stream...</p>
+                  <Loader2 className="h-10 w-10 mx-auto mb-2 animate-spin text-white/20" />
+                  <p className="text-sm text-white/30">Waiting for video stream...</p>
                 </div>
               </div>
             )}
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Stream Info */}
       {dimensions && (
-        <div className="flex gap-4 text-xs text-muted-foreground">
-          <span className="px-2 py-1 rounded bg-white/[0.04] border border-white/[0.06]">{dimensions.width}x{dimensions.height}</span>
-          {fps > 0 && <span className="px-2 py-1 rounded bg-white/[0.04] border border-white/[0.06]">{fps.toFixed(1)} FPS</span>}
+        <div className="flex gap-2 text-xs text-white/35">
+          <span className="px-2 py-1 rounded-lg bg-white/[0.03] border border-white/[0.05]">{dimensions.width}x{dimensions.height}</span>
+          {fps > 0 && <span className="px-2 py-1 rounded-lg bg-white/[0.03] border border-white/[0.05]">{fps.toFixed(1)} FPS</span>}
         </div>
       )}
 
