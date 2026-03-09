@@ -39,7 +39,7 @@ export function VideoResults({ videoUrl, modelName, classes }: VideoResultsProps
           onClick={handleDownload}
           variant="outline"
           size="sm"
-          className="h-8 text-xs"
+          className="h-8 text-xs border-white/10 hover:border-primary/30 hover:bg-primary/5 transition-all duration-300"
         >
           <Download className="h-3 w-3 mr-1" />
           Download
@@ -47,9 +47,9 @@ export function VideoResults({ videoUrl, modelName, classes }: VideoResultsProps
       </div>
 
       {/* Video Player */}
-      <Card className="overflow-hidden">
-        <div className="p-4 bg-muted/30">
-          <div className="relative w-full rounded overflow-hidden bg-black">
+      <Card className="overflow-hidden glass-card border-white/[0.06]">
+        <div className="p-4">
+          <div className="relative w-full rounded-lg overflow-hidden bg-black border border-white/[0.04]">
             <video
               src={videoUrl}
               controls

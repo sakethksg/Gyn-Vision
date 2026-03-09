@@ -27,11 +27,10 @@ export default function SegmentationPage() {
   const [currentFrame, setCurrentFrame] = useState(0);
   const [totalFrames, setTotalFrames] = useState(0);
   const [streamAbortController, setStreamAbortController] = useState<AbortController | null>(null);
-  const [sampleRate, setSampleRate] = useState<number>(15); // Default: ~2fps (every 15th frame)
+  const [sampleRate, setSampleRate] = useState<number>(15);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch models on mount
   useEffect(() => {
     const loadModels = async () => {
       try {
@@ -47,7 +46,6 @@ export default function SegmentationPage() {
     loadModels();
   }, []);
 
-  // Handle mode change
   const handleModeChange = (newMode: Mode) => {
     setMode(newMode);
     setSelectedFile(null);
@@ -56,13 +54,11 @@ export default function SegmentationPage() {
     setError(null);
   };
 
-  // Handle file selection
   const handleFileSelect = (file: File) => {
     setSelectedFile(file);
     setError(null);
   };
 
-  // Handle segmentation
   const handleSegment = async () => {
     if (!selectedFile || !selectedModelId) return;
 
@@ -75,7 +71,6 @@ export default function SegmentationPage() {
     setCurrentFrame(0);
     setTotalFrames(0);
     
-    // Cancel any existing stream
     if (streamAbortController) {
       streamAbortController.abort();
     }
@@ -85,15 +80,11 @@ export default function SegmentationPage() {
         const result = await segmentImage(selectedFile, selectedModelId);
         setImageResult(result);
       } else {
-        // Create abort controller for this stream
         const abortController = new AbortController();
         setStreamAbortController(abortController);
-        
-        // Use streaming for video
         setIsStreaming(true);
-        setLoading(false); // Show streaming UI instead of loading
+        setLoading(false);
         
-        // Fetch class metadata for the model
         try {
           const classes = await fetchModelClasses(selectedModelId);
           setVideoClasses(classes);
@@ -106,19 +97,16 @@ export default function SegmentationPage() {
           selectedModelId,
           sampleRate,
           (frameData) => {
-            // Check if aborted
             if (abortController.signal.aborted) return;
             
             if (frameData.type === 'metadata') {
               setTotalFrames(frameData.total_frames || 0);
-              // Pass metadata to canvas
               if ((window as any).setStreamMetadata) {
                 (window as any).setStreamMetadata(frameData);
               }
             } else if (frameData.type === 'frame') {
               setCurrentFrame(frameData.frame_index || 0);
               setStreamProgress(frameData.progress || 0);
-              // Update canvas with new frame
               if ((window as any).updateStreamCanvas && frameData.frame_data) {
                 (window as any).updateStreamCanvas(frameData.frame_data);
               }
@@ -137,7 +125,7 @@ export default function SegmentationPage() {
             setLoading(false);
             setStreamAbortController(null);
           },
-          abortController.signal // Pass abort signal
+          abortController.signal
         );
       }
     } catch (err: unknown) {
@@ -147,14 +135,11 @@ export default function SegmentationPage() {
     }
   };
 
-  // Handle clearing results
   const handleClear = () => {
-    // Abort streaming if active
     if (streamAbortController) {
       try {
         streamAbortController.abort();
       } catch (error) {
-        // Ignore abort errors - they're expected
         console.log('Stream aborted by user');
       }
       setStreamAbortController(null);
@@ -168,7 +153,6 @@ export default function SegmentationPage() {
     setTotalFrames(0);
     setError(null);
     
-    // Clear canvas
     if ((window as any).updateStreamCanvas) {
       const canvas = document.querySelector('canvas');
       if (canvas) {
@@ -183,17 +167,23 @@ export default function SegmentationPage() {
   const selectedModel = models.find(m => m.id === selectedModelId);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header with Back Button */}
-      <header className="border-b bg-card/50 backdrop-blur-sm">
+    <div className="min-h-screen bg-background relative">
+      {/* Subtle background glow */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-primary/5 blur-[150px] rounded-full" />
+        <div className="absolute bottom-1/4 left-0 w-[300px] h-[300px] bg-[oklch(0.55_0.18_310_/_0.05)] blur-[120px] rounded-full" />
+      </div>
+
+      {/* Header */}
+      <header className="border-b border-white/[0.06] glass">
         <div className="container mx-auto px-6 py-4 flex items-center gap-4">
           <Link href="/">
-            <Button variant="ghost" size="sm" className="gap-2">
+            <Button variant="ghost" size="sm" className="gap-2 hover:bg-white/[0.06]">
               <ArrowLeft className="h-4 w-4" />
               Back
             </Button>
           </Link>
-          <div className="border-l h-8 mx-2" />
+          <div className="border-l border-white/[0.1] h-8 mx-2" />
           <div>
             <h1 className="text-lg font-bold">Segmentation Tool</h1>
             <p className="text-xs text-muted-foreground">Upload and analyze laparoscopic images or videos</p>
@@ -206,16 +196,18 @@ export default function SegmentationPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Left Panel - Controls */}
           <div className="lg:col-span-1">
-            <Card className="p-5 space-y-6 sticky top-4 glass-panel border-white/10 relative overflow-hidden">
+            <Card className="p-5 space-y-6 sticky top-4 glass-panel relative overflow-hidden">
+              {/* Subtle top highlight */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent" />
+
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold tracking-wide uppercase text-foreground/80">Configuration</h3>
                 {error && (
                   <div className="group relative flex flex-col items-center">
                     <div className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75" />
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive" />
                     </div>
-                    {/* Tooltip for error */}
                     <div className="absolute top-full mt-2 right-0 w-48 p-2 bg-destructive text-destructive-foreground text-xs rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
                       {error}
                     </div>
@@ -224,7 +216,7 @@ export default function SegmentationPage() {
               </div>
                 
               <div className="space-y-6">
-                <div className="space-y-5 bg-background/50 p-4 rounded-xl border border-border/50 shadow-inner">
+                <div className="space-y-5 bg-white/[0.03] p-4 rounded-xl border border-white/[0.06] shadow-inner">
                   <ModelSelector
                     models={models}
                     selectedId={selectedModelId}
@@ -239,12 +231,11 @@ export default function SegmentationPage() {
                   />
                 </div>
 
-                {/* Video Sample Rate Slider - Only show for video mode */}
+                {/* Video Sample Rate Slider */}
                 {mode === 'video' && (
                   <div className="space-y-3">
                     <label className="text-xs font-medium">Processing Speed</label>
                     
-                    {/* Preset Buttons */}
                     <div className="grid grid-cols-3 gap-2">
                       <Button
                         type="button"
@@ -252,7 +243,7 @@ export default function SegmentationPage() {
                         size="sm"
                         onClick={() => setSampleRate(30)}
                         disabled={loading}
-                        className="text-xs h-8"
+                        className={`text-xs h-8 ${sampleRate === 30 ? 'glow-cyan' : 'border-white/10'}`}
                       >
                         Fast
                         <span className="text-[10px] ml-1 opacity-70">(1fps)</span>
@@ -263,7 +254,7 @@ export default function SegmentationPage() {
                         size="sm"
                         onClick={() => setSampleRate(15)}
                         disabled={loading}
-                        className="text-xs h-8"
+                        className={`text-xs h-8 ${sampleRate === 15 ? 'glow-cyan' : 'border-white/10'}`}
                       >
                         Balanced
                         <span className="text-[10px] ml-1 opacity-70">(2fps)</span>
@@ -274,14 +265,13 @@ export default function SegmentationPage() {
                         size="sm"
                         onClick={() => setSampleRate(5)}
                         disabled={loading}
-                        className="text-xs h-8"
+                        className={`text-xs h-8 ${sampleRate === 5 ? 'glow-cyan' : 'border-white/10'}`}
                       >
                         Quality
                         <span className="text-[10px] ml-1 opacity-70">(6fps)</span>
                       </Button>
                     </div>
 
-                    {/* Custom Slider */}
                     <div className="space-y-2">
                       <div className="flex items-center gap-3">
                         <span className="text-xs text-muted-foreground">Custom:</span>
@@ -292,7 +282,7 @@ export default function SegmentationPage() {
                           value={sampleRate}
                           onChange={(e) => setSampleRate(Number(e.target.value))}
                           disabled={loading}
-                          className="flex-1 h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                          className="flex-1"
                         />
                         <span className="text-xs font-medium min-w-[60px]">
                           ~{sampleRate}x faster
@@ -313,7 +303,7 @@ export default function SegmentationPage() {
                 />
 
                 <Button
-                  className="w-full bg-linear-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg hover:shadow-primary/25 transition-all duration-300 rounded-xl h-12 text-base font-medium"
+                  className="w-full bg-linear-to-r from-primary to-[oklch(0.60_0.17_240)] hover:from-primary/90 hover:to-[oklch(0.55_0.17_240)] text-primary-foreground rounded-xl h-12 text-base font-medium glow-cyan transition-all duration-300 hover:shadow-[0_0_30px_oklch(0.72_0.19_220_/_0.3)]"
                   size="lg"
                   onClick={handleSegment}
                   disabled={!selectedFile || loading}
@@ -328,8 +318,6 @@ export default function SegmentationPage() {
                   )}
                 </Button>
               </div>
-
-              {/* Error is now displayed as a pulse indicator in the header */}
             </Card>
           </div>
 
@@ -357,12 +345,13 @@ export default function SegmentationPage() {
                 classes={videoClasses}
               />
             ) : (
-              <Card className="relative flex flex-col items-center justify-center text-center min-h-[600px] border-2 border-dashed border-muted-foreground/20 bg-muted/5 rounded-2xl transition-all duration-300 hover:border-primary/30 hover:bg-primary/5 shadow-sm overflow-hidden">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none opacity-50"></div>
+              <Card className="relative flex flex-col items-center justify-center text-center min-h-[600px] glass-card border-white/[0.06] rounded-2xl transition-all duration-500 hover:border-primary/20 hover:shadow-[0_0_40px_oklch(0.72_0.19_220_/_0.08)] overflow-hidden">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(1_0_0_/_0.02)_1px,transparent_1px),linear-gradient(to_bottom,oklch(1_0_0_/_0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none opacity-50" />
                 <div className="z-10 flex flex-col items-center max-w-sm px-6">
-                  <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mb-6 shadow-inner relative">
-                     <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping opacity-20"></div>
-                     <Upload className="h-10 w-10 text-primary" />
+                  <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mb-6 relative">
+                    <div className="absolute inset-0 rounded-full bg-primary/15 animate-ping opacity-20" />
+                    <div className="absolute inset-[-4px] rounded-full border border-primary/20 animate-glow-pulse" />
+                    <Upload className="h-10 w-10 text-primary" />
                   </div>
                   <h3 className="text-2xl font-bold mb-3 text-foreground tracking-tight">Workspace Ready</h3>
                   <p className="text-muted-foreground mb-8 text-balance">
@@ -370,7 +359,7 @@ export default function SegmentationPage() {
                   </p>
                   
                   <div className="w-full max-w-[200px]">
-                    <Button variant="outline" className="w-full glass shadow-sm pointer-events-none opacity-50 font-medium pt-2 pb-2">
+                    <Button variant="outline" className="w-full glass border-white/10 pointer-events-none opacity-50 font-medium pt-2 pb-2">
                       Try Demo {mode === 'image' ? 'Image' : 'Video'}
                     </Button>
                   </div>

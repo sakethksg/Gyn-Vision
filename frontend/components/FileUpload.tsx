@@ -86,9 +86,12 @@ export function FileUpload({ mode, onFileSelect, disabled = false }: FileUploadP
       
       <Card
         className={`
-          relative border-2 border-dashed transition-colors
-          ${isDragging ? 'border-primary bg-accent' : 'border-border'}
-          ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-primary/50'}
+          relative border-2 border-dashed transition-all duration-300 bg-white/[0.02]
+          ${isDragging 
+            ? 'border-primary/60 bg-primary/5 shadow-[0_0_20px_oklch(0.72_0.19_220_/_0.15)]' 
+            : 'border-white/10 hover:border-primary/30'
+          }
+          ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         `}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -98,10 +101,12 @@ export function FileUpload({ mode, onFileSelect, disabled = false }: FileUploadP
           {selectedFile ? (
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <File className="h-8 w-8 text-primary" />
+                <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                  <File className="h-5 w-5 text-primary" />
+                </div>
                 <div>
-                  <p className="font-medium">{selectedFile.name}</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-medium text-sm">{selectedFile.name}</p>
+                  <p className="text-xs text-muted-foreground">
                     {formatFileSize(selectedFile.size)}
                   </p>
                 </div>
@@ -111,13 +116,16 @@ export function FileUpload({ mode, onFileSelect, disabled = false }: FileUploadP
                 size="icon"
                 onClick={clearFile}
                 disabled={disabled}
+                className="hover:bg-white/[0.06]"
               >
                 <X className="h-4 w-4" />
               </Button>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3 text-center">
-              <Upload className="h-12 w-12 text-muted-foreground" />
+              <div className="p-3 rounded-full bg-primary/10 border border-primary/15">
+                <Upload className="h-8 w-8 text-primary/70" />
+              </div>
               <div>
                 <p className="text-sm font-medium">
                   Drop {mode} file here or click to browse
