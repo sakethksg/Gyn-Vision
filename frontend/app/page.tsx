@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Navbar } from '@/components/Navbar';
 import { ArrowRight, Brain, Video, Image as ImageIcon, Zap, Shield, Gauge } from 'lucide-react';
 import DarkVeil from '@/components/DarkVeil';
@@ -69,37 +68,35 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 right-0 h-40 -z-10 bg-gradient-to-t from-background to-transparent" />
 
         <div className="container mx-auto px-6 relative z-10 w-full">
-          <div className="max-w-4xl mx-auto text-center space-y-6">
+          <div className="max-w-3xl mx-auto text-center space-y-7">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass glow-border text-sm transition-all duration-200">
-              <Zap className="h-4 w-4 text-primary" />
-              <span className="font-medium text-foreground/80">AI-Powered Clinical Segmentation</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/[0.12] bg-white/[0.05] backdrop-blur-sm text-sm">
+              <Zap className="h-3.5 w-3.5 text-white/70" />
+              <span className="font-medium text-white/70">AI-Powered Clinical Segmentation</span>
             </div>
 
             {/* Title */}
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.1] text-balance">
-              <span className="glow-text">Gyn-Vision</span>
-              <span className="block text-4xl md:text-5xl lg:text-6xl mt-3 bg-linear-to-r from-primary via-[oklch(0.65_0.17_240)] to-[oklch(0.55_0.18_310)] bg-clip-text text-transparent">
-                Laparoscopic Precision
-              </span>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] text-white text-balance">
+              Gyn-Vision<br />
+              <span className="text-white">Laparoscopic Precision</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="text-xl md:text-2xl text-muted-foreground/90 max-w-3xl mx-auto leading-relaxed text-balance">
+            <p className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto leading-relaxed">
               Advanced deep learning for anatomical segmentation.
               Analyze the uterus, fallopian tubes, and ovaries with clinical-grade accuracy.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
               <Link href="/segmentation">
-                <Button size="lg" className="text-lg px-8 h-14 rounded-xl glow-cyan hover:-translate-y-0.5 transition-all duration-300">
+                <Button size="lg" className="text-base font-semibold px-8 h-12 rounded-full bg-white text-black hover:bg-white/90 transition-all duration-200 shadow-[0_0_30px_rgba(255,255,255,0.15)]">
                   Start Segmentation
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link href="#features">
-                <Button size="lg" variant="outline" className="text-lg px-8 h-14 rounded-xl glass hover:-translate-y-0.5 transition-all duration-300 border-white/10 hover:border-white/20">
+                <Button size="lg" variant="outline" className="text-base font-semibold px-8 h-12 rounded-full border-white/[0.15] bg-white/[0.05] text-white hover:bg-white/[0.10] hover:border-white/25 backdrop-blur-sm transition-all duration-200">
                   Learn More
                 </Button>
               </Link>
@@ -109,42 +106,39 @@ export default function Home() {
       </section>
 
       {/* ── Features Section ── */}
-      <section id="features" className="py-24 relative">
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,transparent,oklch(0.12_0.02_260),transparent)]" />
+      <section id="features" className="py-28 relative bg-[#080608]">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Powerful Features</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-3 text-white">Powerful Features</h2>
+            <p className="text-white/40 text-base max-w-xl mx-auto">
               Everything you need for accurate medical image segmentation
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {features.map((feature) => (
-              <Card
+              <div
                 key={feature.title}
-                className="group relative overflow-hidden glass-card border-white/[0.06] hover:border-primary/30 transition-all duration-500 hover:shadow-[0_0_30px_oklch(0.72_0.19_220_/_0.1)]"
+                className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6 hover:border-white/[0.12] hover:bg-white/[0.05] transition-all duration-300"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500">
-                  <feature.icon className="w-full h-full" />
+                <div className="mb-4 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/[0.06] border border-white/[0.08]">
+                  <feature.icon className="w-5 h-5 text-white/70" />
                 </div>
-                <div className="relative p-8">
-                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-                </div>
-              </Card>
+                <h3 className="text-base font-semibold text-white mb-2">{feature.title}</h3>
+                <p className="text-sm text-white/40 leading-relaxed">{feature.description}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── About Section ── */}
-      <section id="about" className="py-24">
+      <section id="about" className="py-28 bg-[#080608]">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold">About This System</h2>
-              <div className="space-y-4 text-muted-foreground">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-5">
+              <h2 className="text-3xl md:text-4xl font-bold text-white">About This System</h2>
+              <div className="space-y-4 text-white/45 text-sm leading-relaxed">
                 <p>
                   This segmentation system leverages cutting-edge deep learning technology to assist medical
                   professionals in analyzing laparoscopic surgical imagery. Built on the SegFormer architecture,
@@ -152,8 +146,7 @@ export default function Home() {
                 </p>
                 <p>
                   The system identifies four primary classes: background, uterus, fallopian tubes, and ovaries,
-                  with color-coded visualization for easy interpretation. Whether you&apos;re analyzing single images
-                  or full surgical videos, our tool provides consistent, reliable results.
+                  with color-coded visualization for easy interpretation.
                 </p>
                 <p>
                   Designed with clinical workflows in mind, the interface is intuitive and efficient, allowing
@@ -162,12 +155,12 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               {stats.map((stat) => (
-                <Card key={stat.label} className="p-6 text-center glass-card border-white/[0.06] hover:border-primary/20 transition-all duration-300">
-                  <div className="text-3xl font-bold text-primary mb-2 glow-text">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
-                </Card>
+                <div key={stat.label} className="p-6 text-center rounded-2xl border border-white/[0.06] bg-white/[0.03]">
+                  <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
+                  <div className="text-xs text-white/40">{stat.label}</div>
+                </div>
               ))}
             </div>
           </div>
@@ -175,52 +168,52 @@ export default function Home() {
       </section>
 
       {/* ── CTA Section ── */}
-      <section className="py-24 relative">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary/8 blur-[120px] rounded-full" />
+      <section className="py-28 relative bg-[#080608]">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-purple-700/20 blur-[80px] rounded-full" />
         </div>
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Get Started?</h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+        <div className="container mx-auto px-6 text-center relative z-10">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Ready to Get Started?</h2>
+          <p className="text-white/40 mb-8 max-w-xl mx-auto">
             Experience the power of AI-assisted medical image segmentation
           </p>
           <Link href="/segmentation">
-            <Button size="lg" className="text-lg px-10 glow-cyan hover:scale-105 transition-all duration-300">
+            <Button size="lg" className="text-base font-semibold px-10 h-12 rounded-full bg-white text-black hover:bg-white/90 transition-all duration-200">
               Start Segmentation Now
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-white/[0.06] py-12 glass">
+      <footer className="border-t border-white/[0.05] py-10 bg-[#080608]">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="font-bold text-lg mb-4">Laparoscopic Segmentation</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className="font-bold text-sm text-white mb-3">Laparoscopic Segmentation</h3>
+              <p className="text-xs text-white/35">
                 AI-powered medical imaging analysis for gynecological surgery.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/segmentation" className="hover:text-primary transition-colors duration-300">Segmentation Tool</Link></li>
-                <li><Link href="#features" className="hover:text-primary transition-colors duration-300">Features</Link></li>
-                <li><Link href="#about" className="hover:text-primary transition-colors duration-300">About</Link></li>
+              <h4 className="font-semibold text-sm text-white mb-3">Quick Links</h4>
+              <ul className="space-y-2 text-xs text-white/35">
+                <li><Link href="/segmentation" className="hover:text-white/70 transition-colors">Segmentation Tool</Link></li>
+                <li><Link href="#features" className="hover:text-white/70 transition-colors">Features</Link></li>
+                <li><Link href="#about" className="hover:text-white/70 transition-colors">About</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Technology</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h4 className="font-semibold text-sm text-white mb-3">Technology</h4>
+              <ul className="space-y-2 text-xs text-white/35">
                 <li>SegFormer Architecture</li>
                 <li>ONNX Runtime</li>
                 <li>Next.js &amp; FastAPI</li>
               </ul>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-white/[0.06] text-center text-sm text-muted-foreground">
+          <div className="mt-8 pt-6 border-t border-white/[0.05] text-center text-xs text-white/25">
             <p>&copy; 2025 Gynecology Laparoscopic Segmentation System. All rights reserved.</p>
           </div>
         </div>

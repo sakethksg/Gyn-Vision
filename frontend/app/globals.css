@@ -53,8 +53,8 @@
   --radius: 0.75rem;
 
   /* ── Dark-only palette ── */
-  /* Deep blue-black base */
-  --background: oklch(0.13 0.02 260);
+  /* Near-black base matching React Bits aesthetic */
+  --background: oklch(0.05 0.008 300);
   --foreground: oklch(0.93 0.01 250);
 
   /* Cards: slightly elevated, semi-transparent feel */

@@ -30,87 +30,46 @@ const fragmentShader = /* glsl */ `
   uniform float uTime;
   uniform vec2  uResolution;
   uniform float uHueShift;
-  uniform float uNoiseIntensity;
-  uniform float uScanlineIntensity;
-  uniform float uScanlineFrequency;
-  uniform float uWarpAmount;
 
   varying vec2 vUv;
 
-  // ── helpers ─────────────────────────────────────────────────────────────────
+  vec2 rot(vec2 p, float a) {
+    float c = cos(a), s = sin(a);
+    return vec2(c*p.x - s*p.y, s*p.x + c*p.y);
+  }
+
+  // ── helpers (kept for hue shift) ────────────────────────────────────────────
   vec3 hsvToRgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
   }
 
-  float hash(vec2 p) {
-    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
-  }
-
-  float noise(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-    vec2 u = f * f * (3.0 - 2.0 * f);
-    return mix(
-      mix(hash(i),               hash(i + vec2(1,0)), u.x),
-      mix(hash(i + vec2(0,1)),   hash(i + vec2(1,1)), u.x),
-      u.y
-    );
-  }
-
-  float fbm(vec2 p) {
-    float v = 0.0, a = 0.5;
-    for (int i = 0; i < 6; i++) {
-      v += a * noise(p);
-      p  = p * 2.0 + vec2(1.7, 9.2);
-      a *= 0.5;
-    }
-    return v;
-  }
-
   // ── main ────────────────────────────────────────────────────────────────────
   void main() {
     vec2 uv = vUv;
+    float t = uTime;
 
-    // optional barrel-warp
-    if (uWarpAmount > 0.0) {
-      vec2 c = uv - 0.5;
-      float len = dot(c, c);
-      uv += c * len * uWarpAmount;
-      uv = clamp(uv, 0.0, 1.0);
-    }
+    // ── large purple blob – top-right corner (dominant) ──
+    vec2 br = uv - vec2(0.85 + sin(t*0.07)*0.06, 0.10 + cos(t*0.05)*0.06);
+    float dr = 1.0 - smoothstep(0.0, 0.75, length(rot(br, t*0.08)));
+    vec3 cr = vec3(0.28, 0.04, 0.62) * pow(dr, 1.4) * 3.2;
 
-    // flowing dark veil
-    float t    = uTime * 0.25;
-    vec2  warp = vec2(fbm(uv * 1.8 + t), fbm(uv * 1.8 + vec2(3.7, 1.5) + t * 0.85));
-    float base = fbm(uv * 1.4 + warp * 0.8);
-    float base2 = fbm(uv * 2.5 + warp * 0.4 + t * 0.5);
+    // ── mid purple glow – top-right bleed ──
+    float dr2 = 1.0 - smoothstep(0.0, 0.55, length(uv - vec2(0.78 + cos(t*0.06)*0.08, 0.22 + sin(t*0.07)*0.05)));
+    vec3 cr2 = vec3(0.38, 0.06, 0.70) * pow(dr2, 1.6) * 2.4;
 
-    // vivid blue-cyan palette with bright highlights
-    float hueBase = 0.58 + uHueShift / 360.0;
-    float sat     = 0.70 + base * 0.30;
-    float val     = 0.05 + base * 0.35 + base2 * 0.20;
+    // ── smaller accent blob – top-centre-left ──
+    float dl = 1.0 - smoothstep(0.0, 0.40, length(rot(uv - vec2(0.30+sin(t*0.09)*0.06, 0.08+cos(t*0.08)*0.04), t*0.10)));
+    vec3 cl = vec3(0.22, 0.03, 0.50) * pow(dl, 2.0) * 2.0;
 
-    vec3 col = hsvToRgb(vec3(fract(hueBase + base * 0.10 - base2 * 0.05), sat, val));
+    // ── diagonal light beam (the white-ish sweep across the ref image) ──
+    float beam = (uv.x * 0.7 - uv.y * 1.2 + 0.3 + sin(t * 0.05) * 0.25);
+    float bv = smoothstep(0.0, 0.18, beam) * (1.0 - smoothstep(0.18, 0.42, beam));
+    vec3 cb = vec3(0.45, 0.20, 0.80) * bv * 0.55;
 
-    // add a secondary warm-teal streak layer
-    float hue2 = 0.50 + base2 * 0.08;
-    float val2  = base2 * 0.18;
-    vec3 col2 = hsvToRgb(vec3(hue2, 0.60, val2));
-    col = mix(col, col + col2, 0.4);
-
-    // grain
-    if (uNoiseIntensity > 0.0) {
-      float grain = hash(uv * uResolution + uTime * 7.3) - 0.5;
-      col += grain * uNoiseIntensity * 0.04;
-    }
-
-    // scanlines
-    if (uScanlineIntensity > 0.0) {
-      float sl = sin(uv.y * uScanlineFrequency * 3.14159 * 2.0);
-      col *= 1.0 - uScanlineIntensity * 0.18 * (0.5 + 0.5 * sl);
-    }
+    // ── near-black base ──
+    vec3 col = vec3(0.02, 0.01, 0.04) + cr + cr2 + cl + cb;
 
     gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
   }
@@ -150,13 +109,9 @@ export default function DarkVeil({
       vertex:   vertexShader,
       fragment: fragmentShader,
       uniforms: {
-        uTime:              { value: 0 },
-        uResolution:        { value: [container.clientWidth, container.clientHeight] },
-        uHueShift:          { value: hueShift },
-        uNoiseIntensity:    { value: noiseIntensity },
-        uScanlineIntensity: { value: scanlineIntensity },
-        uScanlineFrequency: { value: scanlineFrequency },
-        uWarpAmount:        { value: warpAmount },
+        uTime:       { value: 0 },
+        uResolution: { value: [container.clientWidth, container.clientHeight] },
+        uHueShift:   { value: hueShift },
       },
     });
     const mesh = new Mesh(gl, { geometry, program });
