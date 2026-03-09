@@ -6,7 +6,6 @@
 import { useCallback, useState } from 'react';
 import { Mode } from '@/lib/types';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Upload, X, File } from 'lucide-react';
 
 interface FileUploadProps {
@@ -85,65 +84,56 @@ export function FileUpload({ mode, onFileSelect, disabled = false }: FileUploadP
       <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Upload {mode === 'image' ? 'Image' : 'Video'}</label>
       
       <Card
-        className={`
-          relative border-2 border-dashed transition-all duration-300 bg-white/[0.02]
-          ${isDragging 
-            ? 'border-primary/60 bg-primary/5 shadow-[0_0_20px_oklch(0.72_0.19_220_/_0.15)]' 
-            : 'border-white/10 hover:border-primary/30'
-          }
-          ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-        `}
+        className={[
+          'relative border border-dashed transition-all duration-200 bg-white/[0.02]',
+          isDragging
+            ? 'border-primary/60 bg-primary/5 shadow-[0_0_16px_oklch(0.72_0.19_220_/_0.12)]'
+            : selectedFile
+              ? 'border-primary/30 bg-primary/[0.04]'
+              : 'border-white/10 hover:border-primary/25',
+          disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
+        ].join(' ')}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <div className="p-4">
-          {selectedFile ? (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="p-1.5 rounded-lg bg-primary/10 border border-primary/20">
-                  <File className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <p className="font-medium text-sm">{selectedFile.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatFileSize(selectedFile.size)}
-                  </p>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={clearFile}
-                disabled={disabled}
-                className="hover:bg-white/[0.06]"
-              >
-                <X className="h-4 w-4" />
-              </Button>
+        {selectedFile ? (
+          /* ── File selected: compact single-line pill ── */
+          <div className="flex items-center gap-2 px-3 py-2">
+            <div className="flex items-center justify-center w-6 h-6 rounded-md bg-primary/15 shrink-0">
+              <File className="h-3 w-3 text-primary" />
             </div>
-          ) : (
-            <div className="flex flex-col items-center gap-2 text-center">
-              <div className="p-2 rounded-full bg-primary/10 border border-primary/15">
-                <Upload className="h-5 w-5 text-primary/70" />
-              </div>
-              <div>
-                <p className="text-xs font-medium">
-                  Drop {mode} file here or click to browse
-                </p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">
-                  Accepts {acceptedTypes}
-                </p>
-              </div>
-              <input
-                type="file"
-                accept={acceptedTypes}
-                onChange={handleFileChange}
-                disabled={disabled}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
-              />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium truncate leading-none">{selectedFile.name}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{formatFileSize(selectedFile.size)}</p>
             </div>
-          )}
-        </div>
+            <button
+              onClick={clearFile}
+              disabled={disabled}
+              className="shrink-0 w-5 h-5 flex items-center justify-center rounded-md text-muted-foreground hover:text-white hover:bg-white/10 transition-colors"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </div>
+        ) : (
+          /* ── Empty: compact drop zone ── */
+          <div className="flex items-center gap-2.5 px-3 py-3">
+            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 border border-primary/15 shrink-0">
+              <Upload className="h-3.5 w-3.5 text-primary/70" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium leading-none">Drop {mode === 'image' ? 'image' : 'video'} or click to browse</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{acceptedTypes}</p>
+            </div>
+            <input
+              type="file"
+              accept={acceptedTypes}
+              onChange={handleFileChange}
+              disabled={disabled}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+            />
+          </div>
+        )}
       </Card>
     </div>
   );
