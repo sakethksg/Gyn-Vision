@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Mode, Model, ImageResult, ClassInfo } from '@/lib/types';
-import { fetchModels, segmentImage, segmentVideo, fetchModelClasses, segmentVideoStream } from '@/lib/api';
+import { fetchModels, segmentImage, segmentVideo, fetchModelClasses, segmentVideoStream, wakeBackend } from '@/lib/api';
 import { ModelSelector } from '@/components/ModelSelector';
 import { ModeToggle } from '@/components/ModeToggle';
 import { FileUpload } from '@/components/FileUpload';
@@ -31,8 +31,14 @@ export default function SegmentationPage() {
   const [sampleRate, setSampleRate] = useState<number>(15);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [wakeStatus, setWakeStatus] = useState<'waking' | 'ready' | 'timeout' | null>(null);
 
   useEffect(() => {
+    // Wake the backend immediately (handles Render cold starts)
+    wakeBackend(setWakeStatus).then((alive) => {
+      if (alive) loadModels();
+    });
+
     const loadModels = async () => {
       try {
         const fetchedModels = await fetchModels();
@@ -44,6 +50,8 @@ export default function SegmentationPage() {
         setError('Failed to load models');
       }
     };
+
+    // Also attempt load immediately in case backend is already warm
     loadModels();
   }, []);
 
@@ -188,6 +196,25 @@ export default function SegmentationPage() {
             <h1 className="text-base font-bold text-white">Segmentation Tool</h1>
             <p className="text-xs text-white/40">Upload and analyze laparoscopic images or videos</p>
           </div>
+          {/* Backend wake status */}
+          {wakeStatus === 'waking' && (
+            <div className="ml-auto flex items-center gap-2 px-3 py-1.5 rounded-full border border-yellow-500/20 bg-yellow-500/10">
+              <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse" />
+              <span className="text-xs text-yellow-400/80">Waking server...</span>
+            </div>
+          )}
+          {wakeStatus === 'ready' && (
+            <div className="ml-auto flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="text-xs text-emerald-400/80">Server ready</span>
+            </div>
+          )}
+          {wakeStatus === 'timeout' && (
+            <div className="ml-auto flex items-center gap-2 px-3 py-1.5 rounded-full border border-red-500/20 bg-red-500/10">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+              <span className="text-xs text-red-400/80">Server unreachable</span>
+            </div>
+          )}
         </div>
       </header>
 

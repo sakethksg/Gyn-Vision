@@ -7,11 +7,34 @@ import { Model, ImageResult, ClassInfo } from './types';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 /**
+ * Wake the backend by polling /health until it responds.
+ * Render free tier cold-starts in ~20-30s; we poll every 3s for up to 60s.
+ * Returns true when alive, false on timeout.
+ */
+export async function wakeBackend(
+  onStatusChange?: (status: 'waking' | 'ready' | 'timeout') => void
+): Promise<boolean> {
+  onStatusChange?.('waking');
+  const deadline = Date.now() + 60_000;
+  while (Date.now() < deadline) {
+    try {
+      await axios.get(`${API_BASE_URL}/health`, { timeout: 4000 });
+      onStatusChange?.('ready');
+      return true;
+    } catch {
+      await new Promise(r => setTimeout(r, 3000));
+    }
+  }
+  onStatusChange?.('timeout');
+  return false;
+}
+
+/**
  * Fetch available models
  */
 export async function fetchModels(): Promise<Model[]> {
   try {
-    const response = await axios.get(`${API_BASE_URL}/models`);
+    const response = await axios.get(`${API_BASE_URL}/models`, { timeout: 35000 });
     return response.data.models;
   } catch (error) {
     console.warn('Backend API unavailable, falling back to mock models:', error);
