@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Navbar } from '@/components/Navbar';
 import { ArrowRight, Brain, Video, Image as ImageIcon, Zap, Shield, Gauge } from 'lucide-react';
+import DarkVeil from '@/components/DarkVeil';
 
 const features = [
   {
@@ -48,19 +49,24 @@ const stats = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background overflow-hidden">
+    <div className="min-h-screen overflow-hidden">
       <Navbar />
 
       {/* ── Hero Section ── */}
       <section className="relative min-h-screen flex items-center justify-center pt-24 pb-12">
-        {/* Animated background orbs */}
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] rounded-full bg-primary/8 blur-[120px] animate-float" />
-          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-[oklch(0.55_0.18_310_/_0.08)] blur-[100px] animate-float-delayed" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary/5 blur-[150px] rounded-full" />
+        {/* DarkVeil WebGL background */}
+        <div className="absolute inset-0 -z-10">
+          <DarkVeil
+            hueShift={0}
+            noiseIntensity={0}
+            scanlineIntensity={0}
+            speed={0.5}
+            scanlineFrequency={0}
+            warpAmount={0}
+          />
         </div>
-        {/* Subtle grid */}
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,oklch(1_0_0_/_0.03)_1px,transparent_1px),linear-gradient(to_bottom,oklch(1_0_0_/_0.03)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+        {/* Fade bottom edge into page */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 -z-10 bg-gradient-to-t from-background to-transparent" />
 
         <div className="container mx-auto px-6 relative z-10 w-full">
           <div className="max-w-4xl mx-auto text-center space-y-6">
@@ -97,35 +103,6 @@ export default function Home() {
                   Learn More
                 </Button>
               </Link>
-            </div>
-          </div>
-
-          {/* Floating Glass Card Comparison */}
-          <div className="max-w-5xl mx-auto mt-20 relative perspective-1000">
-            <div className="absolute -inset-2 bg-linear-to-r from-primary/20 via-[oklch(0.55_0.18_310_/_0.15)] to-primary/20 rounded-2xl blur-xl animate-glow-pulse" />
-            <div className="relative glass-card rounded-2xl p-2 md:p-3 overflow-hidden transform transition-transform duration-500 hover:scale-[1.01]">
-              <div className="rounded-xl overflow-hidden flex flex-col md:flex-row border border-white/[0.06]">
-                {/* Original View */}
-                <div className="w-full md:w-1/2 p-4 md:p-6 border-b md:border-b-0 md:border-r border-white/[0.06] flex flex-col items-center justify-center min-h-[250px] md:min-h-[360px] relative bg-background/50">
-                  <div className="absolute top-4 left-4 px-2.5 py-1 text-xs font-semibold tracking-wider rounded-md glass text-muted-foreground z-10">
-                    ORIGINAL
-                  </div>
-                  <div className="w-4/5 h-4/5 min-h-[220px] rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center opacity-70">
-                    <ImageIcon className="w-12 h-12 text-muted-foreground/40" />
-                  </div>
-                </div>
-                {/* Segmented View */}
-                <div className="w-full md:w-1/2 p-4 md:p-6 flex flex-col items-center justify-center min-h-[250px] md:min-h-[360px] relative bg-background/30">
-                  <div className="absolute top-4 left-4 px-2.5 py-1 text-xs font-semibold tracking-wider rounded-md glass glow-border text-primary z-10 flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                    SEGMENTED
-                  </div>
-                  <div className="w-4/5 h-4/5 min-h-[220px] rounded-lg border-2 border-primary/20 bg-primary/5 flex items-center justify-center overflow-hidden relative">
-                    <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(1_0_0_/_0.03)_1px,transparent_1px),linear-gradient(to_bottom,oklch(1_0_0_/_0.03)_1px,transparent_1px)] bg-[size:16px_16px] opacity-30" />
-                    <Brain className="w-12 h-12 text-primary/60 relative z-10" />
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
