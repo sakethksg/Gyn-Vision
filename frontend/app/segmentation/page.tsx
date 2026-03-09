@@ -206,22 +206,38 @@ export default function SegmentationPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Left Panel - Controls */}
           <div className="lg:col-span-1">
-            <Card className="p-4 space-y-4 sticky top-4">
-              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Settings</h3>
+            <Card className="p-5 space-y-6 sticky top-4 glass-panel border-white/10 relative overflow-hidden">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-bold tracking-wide uppercase text-foreground/80">Configuration</h3>
+                {error && (
+                  <div className="group relative flex flex-col items-center">
+                    <div className="relative flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive"></span>
+                    </div>
+                    {/* Tooltip for error */}
+                    <div className="absolute top-full mt-2 right-0 w-48 p-2 bg-destructive text-destructive-foreground text-xs rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                      {error}
+                    </div>
+                  </div>
+                )}
+              </div>
                 
-              <div className="space-y-4">
-                <ModelSelector
-                  models={models}
-                  selectedId={selectedModelId}
-                  onSelect={setSelectedModelId}
-                  disabled={loading}
-                />
+              <div className="space-y-6">
+                <div className="space-y-5 bg-background/50 p-4 rounded-xl border border-border/50 shadow-inner">
+                  <ModelSelector
+                    models={models}
+                    selectedId={selectedModelId}
+                    onSelect={setSelectedModelId}
+                    disabled={loading}
+                  />
 
-                <ModeToggle
-                  mode={mode}
-                  onChange={handleModeChange}
-                  disabled={loading}
-                />
+                  <ModeToggle
+                    mode={mode}
+                    onChange={handleModeChange}
+                    disabled={loading}
+                  />
+                </div>
 
                 {/* Video Sample Rate Slider - Only show for video mode */}
                 {mode === 'video' && (
@@ -297,14 +313,14 @@ export default function SegmentationPage() {
                 />
 
                 <Button
-                  className="w-full"
+                  className="w-full bg-linear-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg hover:shadow-primary/25 transition-all duration-300 rounded-xl h-12 text-base font-medium"
                   size="lg"
                   onClick={handleSegment}
                   disabled={!selectedFile || loading}
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                       Processing...
                     </>
                   ) : (
@@ -313,13 +329,7 @@ export default function SegmentationPage() {
                 </Button>
               </div>
 
-              {/* Error Display */}
-              {error && (
-                <div className="flex items-start gap-2 p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded text-xs">
-                  <AlertCircle className="h-4 w-4 shrink-0" />
-                  <p>{error}</p>
-                </div>
-              )}
+              {/* Error is now displayed as a pulse indicator in the header */}
             </Card>
           </div>
 
@@ -347,13 +357,23 @@ export default function SegmentationPage() {
                 classes={videoClasses}
               />
             ) : (
-              <Card className="p-16 flex flex-col items-center justify-center text-center min-h-[500px] border-dashed">
-                <div className="text-muted-foreground">
-                  <Upload className="h-16 w-16 mx-auto mb-4 opacity-30" />
-                  <p className="text-lg font-medium mb-2">No results yet</p>
-                  <p className="text-sm">
-                    Upload {mode === 'image' ? 'an image' : 'a video'} and run segmentation to see results
+              <Card className="relative flex flex-col items-center justify-center text-center min-h-[600px] border-2 border-dashed border-muted-foreground/20 bg-muted/5 rounded-2xl transition-all duration-300 hover:border-primary/30 hover:bg-primary/5 shadow-sm overflow-hidden">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none opacity-50"></div>
+                <div className="z-10 flex flex-col items-center max-w-sm px-6">
+                  <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mb-6 shadow-inner relative">
+                     <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping opacity-20"></div>
+                     <Upload className="h-10 w-10 text-primary" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 text-foreground tracking-tight">Workspace Ready</h3>
+                  <p className="text-muted-foreground mb-8 text-balance">
+                    Upload your surgical {mode === 'image' ? 'image' : 'video'} to begin AI segmentation analysis.
                   </p>
+                  
+                  <div className="w-full max-w-[200px]">
+                    <Button variant="outline" className="w-full glass shadow-sm pointer-events-none opacity-50 font-medium pt-2 pb-2">
+                      Try Demo {mode === 'image' ? 'Image' : 'Video'}
+                    </Button>
+                  </div>
                 </div>
               </Card>
             )}

@@ -204,8 +204,21 @@
   
   body {
     @apply bg-background text-foreground;
-    /* Smooth transitions for theme switching */
-    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Smooth transitions globally */
+    transition: all 0.2s ease-in-out;
+  }
+  
+  /* Added Glassmorphism Utilities */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-sm dark:bg-black/40 dark:border-white/10;
+  }
+
+  .glass-card {
+    @apply bg-card/70 backdrop-blur-xl border border-white/20 shadow-lg dark:bg-card/40 dark:border-white/10;
+  }
+
+  .glass-panel {
+    @apply bg-background/80 backdrop-blur-lg border border-border/50 shadow-md;
   }
   
   /* Medical-specific utility classes */

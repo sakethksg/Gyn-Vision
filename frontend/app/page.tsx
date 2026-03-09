@@ -12,23 +12,11 @@ export default function Home() {
       <Navbar />
       
       {/* Hero Section - Full Screen */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Cool Blue Glow Background */}
-        <div
-          className="absolute inset-0 -z-999"
-          style={{
-            background: "#ffffff",
-            backgroundImage: `
-              radial-gradient(
-                circle at top center,
-                rgba(70, 130, 180, 0.5),
-                transparent 70%
-              )
-            `,
-            filter: "blur(80px)",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background pt-24 pb-12">
+        {/* Modern Grid Background */}
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+        {/* Soft Radial Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/20 blur-[100px] rounded-full -z-10 pointer-events-none" />
         
         {/* Additional Animated Elements */}
         <div className="absolute inset-0 -z-10">
@@ -36,37 +24,66 @@ export default function Home() {
           <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse delay-1000" />
         </div>
 
-        <div className="container mx-auto px-6 py-32">
-          <div className="max-w-4xl mx-auto text-center space-y-4">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border bg-background/80 backdrop-blur-sm text-sm shadow-lg">
+        <div className="container mx-auto px-6 relative z-10 w-full">
+          <div className="max-w-4xl mx-auto text-center space-y-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border bg-background/80 backdrop-blur-md text-sm shadow-sm transition-all duration-200">
               <Zap className="h-4 w-4 text-primary" />
-              <span className="font-medium">AI-Powered Medical Imaging</span>
+              <span className="font-medium text-foreground/80">AI-Powered Clinical Segmentation</span>
             </div>
             
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-tight">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.1] text-balance">
               Gyn-Vision
-              <span className="block text-4xl md:text-5xl lg:text-6xl mt-4 bg-linear-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                Laparoscopic Segmentation
+              <span className="block text-4xl md:text-5xl lg:text-6xl mt-3 bg-linear-to-r from-primary via-primary/80 to-primary/50 bg-clip-text text-transparent">
+                Laparoscopic Precision
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Advanced deep learning models for precise anatomical segmentation. 
-              Analyze uterus, fallopian tubes, and ovaries with clinical-grade accuracy.
+            <p className="text-xl md:text-2xl text-muted-foreground/90 max-w-3xl mx-auto leading-relaxed text-balance">
+              Advanced deep learning for anatomical segmentation. 
+              Analyze the uterus, fallopian tubes, and ovaries with clinical-grade accuracy.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
               <Link href="/segmentation">
-                <Button size="lg" className="text-lg px-10 h-14 shadow-lg hover:shadow-xl transition-all">
+                <Button size="lg" className="text-lg px-8 h-14 rounded-xl shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all duration-200">
                   Start Segmentation
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link href="#features">
-                <Button size="lg" variant="outline" className="text-lg px-10 h-14 shadow-lg hover:shadow-xl transition-all">
+                <Button size="lg" variant="outline" className="text-lg px-8 h-14 rounded-xl shadow-sm hover:bg-muted/50 hover:-translate-y-0.5 transition-all duration-200 glass">
                   Learn More
                 </Button>
               </Link>
+            </div>
+          </div>
+
+          {/* Floating Glass Card Comparison */}
+          <div className="max-w-5xl mx-auto mt-20 relative perspective-1000">
+            <div className="absolute -inset-1 bg-linear-to-r from-primary/30 via-secondary/30 to-primary/30 rounded-2xl blur-xl opacity-50"></div>
+            <div className="relative glass-card rounded-2xl p-2 md:p-3 overflow-hidden shadow-2xl border-white/20 transform transition-transform duration-500 hover:scale-[1.01]">
+              <div className="bg-muted/20 rounded-xl overflow-hidden shadow-inner flex flex-col md:flex-row border border-border/50">
+                {/* Original View Mockup */}
+                <div className="w-full md:w-1/2 p-4 md:p-6 border-b md:border-b-0 md:border-r border-border/50 flex flex-col items-center justify-center min-h-[250px] md:min-h-[360px] relative bg-background">
+                  <div className="absolute top-4 left-4 px-2.5 py-1 text-xs font-semibold tracking-wider rounded-md bg-background/80 backdrop-blur-md border border-border/50 shadow-sm text-muted-foreground z-10">
+                    ORIGINAL
+                  </div>
+                  <div className="w-4/5 h-4/5 min-h-[220px] rounded-lg border-2 border-dashed border-muted flex items-center justify-center opacity-70">
+                    <ImageIcon className="w-12 h-12 text-muted-foreground/50" />
+                  </div>
+                </div>
+                {/* Segmented View Mockup */}
+                <div className="w-full md:w-1/2 p-4 md:p-6 flex flex-col items-center justify-center min-h-[250px] md:min-h-[360px] relative bg-background/50">
+                  <div className="absolute top-4 left-4 px-2.5 py-1 text-xs font-semibold tracking-wider rounded-md bg-primary/10 border border-primary/20 text-primary shadow-sm z-10 flex items-center gap-1.5 glass">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
+                    SEGMENTED
+                  </div>
+                  <div className="w-4/5 h-4/5 min-h-[220px] rounded-lg border-2 border-primary/20 bg-primary/5 flex items-center justify-center overflow-hidden relative">
+                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:16px_16px] opacity-30"></div>
+                    <Brain className="w-12 h-12 text-primary/70 relative z-10" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

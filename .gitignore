@@ -4,6 +4,7 @@ plans/
 # Large model files (use Git LFS or download separately)
 backend/models/*.onnx
 backend/models/onnx/*.onnx
+*.onnx
 
 # Python
 __pycache__/
