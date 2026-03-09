@@ -20,35 +20,35 @@ COLOR_MAP_4 = {
 
 # 8-class model (round 2)
 CLASS_METADATA_8 = [
-    {"id": 0, "name": "background", "color": "transparent"},               # Transparent
+    {"id": 0, "name": "background", "color": "#C8543A"},               # Warm rose-red
     {"id": 1, "name": "External Iliac Artery", "color": "#E05C5C"},    # Soft rose red
     {"id": 2, "name": "External Iliac Vein", "color": "#5B8AD4"},      # Soft blue
     {"id": 3, "name": "Obturator Nerve", "color": "#3BB38A"},          # Soft teal
     {"id": 4, "name": "Ovary", "color": "#E8A94A"},                    # Soft amber
     {"id": 5, "name": "Ureter", "color": "#E07AB8"},                   # Soft pink
     {"id": 6, "name": "Uterine Artery", "color": "#4AC5D9"},           # Soft cyan
-    {"id": 7, "name": "Uterus", "color": "#9B72D0"}                    # Soft lavender
+    {"id": 7, "name": "Uterus", "color": "#1A5FA8"}                    # Dark blue
 ]
 
 COLOR_MAP_8 = {
-    0: (0, 0, 0, 0),           # Transparent - background
+    0: (200, 84, 58, 160),     # Warm rose-red (semi-transparent) - background
     1: (224, 92, 92, 220),     # Soft rose red - External Iliac Artery
     2: (91, 138, 212, 220),    # Soft blue - External Iliac Vein
     3: (59, 179, 138, 220),    # Soft teal - Obturator Nerve
     4: (232, 169, 74, 220),    # Soft amber - Ovary
     5: (224, 122, 184, 220),   # Soft pink - Ureter
     6: (74, 197, 217, 220),    # Soft cyan - Uterine Artery
-    7: (155, 114, 208, 220)    # Soft lavender - Uterus
+    7: (26, 95, 168, 230)     # Dark blue - Uterus
 }
 
 # 2-class model (b1_med)
 CLASS_METADATA_2 = [
-    {"id": 0, "name": "background", "color": "transparent"},   # Transparent
-    {"id": 1, "name": "tissue", "color": "#E05C5C"}            # Soft rose red
+    {"id": 0, "name": "background", "color": "#C8543A"},   # Warm rose-red
+    {"id": 1, "name": "tissue", "color": "#E05C5C"}        # Soft rose red
 ]
 
 COLOR_MAP_2 = {
-    0: (0, 0, 0, 0),         # Transparent - background
+    0: (200, 84, 58, 160),   # Warm rose-red (semi-transparent) - background
     1: (224, 92, 92, 220)    # Soft rose red - tissue
 }
 
