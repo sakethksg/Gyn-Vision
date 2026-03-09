@@ -100,26 +100,38 @@ async def segment_image(
         # Read file
         file_bytes = await file.read()
         
+        # Run inference
+        model_type = config.get('type', 'segformer')
+        
         # Preprocess
         input_tensor, original_image, original_size = preprocess_image(
             file_bytes,
             input_size=config['input_size'],
             normalize=config['normalize'],
             mean=config.get('mean'),
-            std=config.get('std')
+            std=config.get('std'),
+            model_type=model_type
         )
         
-        # Run inference
-        model_type = config.get('type', 'segformer')
         logits = run_inference(session, input_tensor, model_type)
+        
+        # For segformer: pin the displayed image to the inference resolution
+        # so the mask & image are pixel-perfect — no blurry upscaling
+        if model_type == 'segformer':
+            from PIL import Image as PILImage
+            display_size = (720, 480)
+            display_image = original_image.resize(display_size, PILImage.BILINEAR)
+        else:
+            display_image = original_image
+            display_size = original_size
         
         # Postprocess
         result = process_segmentation_result(
             logits, 
-            original_image, 
-            original_size,
+            display_image, 
+            display_size,
             model_type=model_type,
-            input_shape=(config['input_size'], config['input_size']),
+            input_shape=(720, 480) if model_type == 'segformer' else (config['input_size'], config['input_size']),
             num_classes=config.get('num_classes', 4)
         )
         
@@ -127,7 +139,7 @@ async def segment_image(
         return {
             "model_id": model_id,
             "classes": result['statistics'],
-            "original_image": encode_image_to_base64(original_image),
+            "original_image": encode_image_to_base64(display_image),
             "mask_image": encode_image_to_base64(result['mask_image']),
             "overlay_image": encode_image_to_base64(result['overlay_image'])
         }

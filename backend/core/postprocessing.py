@@ -81,10 +81,28 @@ def generate_mask(logits, original_size: Tuple[int, int] = None, model_type: str
                 pass
     else:
         # SegFormer output processing
-        # Argmax over classes: (1, C, H, W) -> (H, W)
-        mask = np.argmax(logits[0], axis=0).astype(np.uint8)
+        # KEY: upsample logits (continuous floats) BEFORE argmax
+        # so bilinear interpolation produces smooth class boundaries.
+        # Taking argmax first then INTER_NEAREST causes blocky/boxy edges.
+        logit_map = logits[0]  # (C, H, W)
+        
+        if original_size is not None:
+            target_w, target_h = original_size  # PIL convention: (width, height)
+            C, H, W = logit_map.shape
+            upsampled = np.zeros((C, target_h, target_w), dtype=np.float32)
+            for c in range(C):
+                upsampled[c] = cv2.resize(
+                    logit_map[c],
+                    (target_w, target_h),
+                    interpolation=cv2.INTER_LINEAR
+                )
+            mask = np.argmax(upsampled, axis=0).astype(np.uint8)
+            # Already at target size — skip the generic resize below
+            return mask
+        else:
+            mask = np.argmax(logit_map, axis=0).astype(np.uint8)
     
-    # Resize to original size if needed
+    # Resize non-segformer masks to original size if needed
     if original_size is not None:
         mask = cv2.resize(
             mask,
@@ -387,9 +405,14 @@ def create_video_with_overlay(
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 original_frame = Image.fromarray(frame_rgb)
                 
-                # Resize for model
+                # Resize for model based on type
+                if model_type == 'segformer':
+                    target_w, target_h = 720, 480
+                else:
+                    target_w, target_h = input_size, input_size
+                    
                 resized_frame = original_frame.resize(
-                    (input_size, input_size),
+                    (target_w, target_h),
                     Image.BILINEAR
                 )
                 
@@ -414,7 +437,7 @@ def create_video_with_overlay(
                     original_frame,
                     original_frame.size,
                     model_type=model_type,
-                    input_shape=(input_size, input_size),
+                    input_shape=(target_w, target_h),
                     num_classes=num_classes
                 )
                 

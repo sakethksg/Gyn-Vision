@@ -14,7 +14,8 @@ def preprocess_image(
     input_size: int,
     normalize: bool = True,
     mean: List[float] = None,
-    std: List[float] = None
+    std: List[float] = None,
+    model_type: str = "segformer"
 ) -> Tuple[np.ndarray, Image.Image, Tuple[int, int]]:
     """
     Preprocess image for ONNX model inference.
@@ -33,8 +34,15 @@ def preprocess_image(
     original_image = Image.open(io.BytesIO(file_bytes)).convert('RGB')
     original_size = original_image.size  # (width, height)
     
-    # Resize to model input size
-    resized_image = original_image.resize((input_size, input_size), Image.BILINEAR)
+    # Resize to target size based on model requirements
+    if model_type == 'segformer':
+        # Use 720x480 as requested
+        target_w, target_h = 720, 480
+    else:
+        # Fixed square resizing (e.g. for YOLO)
+        target_w, target_h = input_size, input_size
+        
+    resized_image = original_image.resize((target_w, target_h), Image.BILINEAR)
     
     # Convert to numpy array
     img_array = np.array(resized_image, dtype=np.float32)

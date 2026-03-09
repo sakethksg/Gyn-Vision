@@ -17,9 +17,9 @@ export async function fetchModels(): Promise<Model[]> {
     console.warn('Backend API unavailable, falling back to mock models:', error);
     // Return mock models if the backend is down
     return [
-      { id: 'segformer-b0', name: 'SegFormer-B0 (Fastest)', description: 'segmentation' },
-      { id: 'segformer-b1', name: 'SegFormer-B1 (Balanced)', description: 'segmentation' },
-      { id: 'segformer-b2', name: 'SegFormer-B2 (Highest Accuracy)', description: 'segmentation' },
+      { id: 'segformer_b0', name: 'SegFormer-B0 (Fastest)', description: 'segmentation' },
+      { id: 'segformer_b1', name: 'SegFormer-B1 (Balanced)', description: 'segmentation' },
+      { id: 'segformer_b2', name: 'SegFormer-B2 (Highest Accuracy)', description: 'segmentation' },
     ];
   }
 }

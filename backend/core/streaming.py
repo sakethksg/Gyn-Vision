@@ -94,9 +94,14 @@ def stream_video_segmentation(
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 original_frame = Image.fromarray(frame_rgb)
                 
-                # Resize for model
+                # Resize for model based on type
+                if model_type == 'segformer':
+                    target_w, target_h = 720, 480
+                else:
+                    target_w, target_h = input_size, input_size
+                    
                 resized_frame = original_frame.resize(
-                    (input_size, input_size),
+                    (target_w, target_h),
                     Image.BILINEAR
                 )
                 
@@ -121,7 +126,7 @@ def stream_video_segmentation(
                     original_frame,
                     original_frame.size,
                     model_type=model_type,
-                    input_shape=(input_size, input_size),
+                    input_shape=(target_w, target_h),
                     num_classes=num_classes
                 )
                 
