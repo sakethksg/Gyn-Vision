@@ -12,6 +12,7 @@ import { VideoResults } from '@/components/VideoResults';
 import { StreamingVideoResults } from '@/components/StreamingVideoResults';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
+import { Legend } from '@/components/Legend';
 import { Loader2, Upload, ArrowLeft } from 'lucide-react';
 
 export default function SegmentationPage() {
@@ -297,12 +298,17 @@ export default function SegmentationPage() {
           </div>
 
           {/* Right Panel - Results */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 space-y-4">
             {imageResult ? (
-              <ImageResults
-                result={imageResult}
-                modelName={selectedModel?.name}
-              />
+              <>
+                <ImageResults
+                  result={imageResult}
+                  modelName={selectedModel?.name}
+                />
+                <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
+                  <Legend classes={imageResult.classes} showStats={true} />
+                </div>
+              </>
             ) : isStreaming || (currentFrame > 0 && !videoUrl) ? (
               <StreamingVideoResults
                 modelName={selectedModel?.name}

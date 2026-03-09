@@ -8,7 +8,6 @@ import { ImageResult } from '@/lib/types';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { Legend } from './Legend';
 import { ZoomIn, ZoomOut, Download, Layers } from 'lucide-react';
 
 interface ImageResultsProps {
@@ -127,10 +126,6 @@ export function ImageResults({ result, modelName }: ImageResultsProps) {
         </div>
       </div>
 
-      {/* Legend */}
-      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
-        <Legend classes={result.classes} showStats={true} />
-      </div>
     </div>
   );
 }

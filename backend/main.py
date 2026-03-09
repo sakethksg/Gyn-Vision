@@ -8,6 +8,8 @@ from core.model_registry import initialize_registry
 from api.routes import router
 import uvicorn
 
+import os
+
 # Initialize FastAPI app
 app = FastAPI(
     title="Gynecology Segmentation API",
@@ -15,10 +17,18 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS configuration
+# CORS configuration — allow localhost + any Vercel deployment + custom CORS_ORIGINS env var
+_extra = [o.strip() for o in os.environ.get("CORS_ORIGINS", "").split(",") if o.strip()]
+allow_origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://gynvision.vercel.app",
+] + _extra
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001"],
+    allow_origins=allow_origins,
+    allow_origin_regex=r"https://gynvision.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -50,6 +60,11 @@ async def startup_event():
     print("API docs at http://localhost:8000/docs")
     print("=" * 60)
 
+
+# Health check
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
 # Include routes
 app.include_router(router)
