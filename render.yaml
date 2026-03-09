@@ -2,11 +2,9 @@ services:
   - type: web
     name: gyn-vision-api
     runtime: docker
-    # Uses a pre-built Docker image pushed to a registry.
-    # Replace with your actual image URL after: docker build + docker push
     image:
-      url: docker.io/YOURUSERNAME/gyn-vision-api:latest
-    plan: starter        # upgrade to 'standard' (2 GB RAM) if inference is slow
+      url: docker.io/sakethkollipara/gyn-vision-api:latest
+    plan: starter
     envVars:
       - key: CORS_ORIGINS
         value: https://gynvision.vercel.app
