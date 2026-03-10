@@ -50,7 +50,7 @@ async def startup_event():
     print("\nInitializing model registry...")
     try:
         initialize_registry(str(config_path))
-        print("\n✓ Model registry initialized successfully")
+        print("\n✓ Model registry initialized (models lazy-loaded on first request)")
     except Exception as e:
         print(f"\n✗ Error initializing models: {e}")
         print("Server will start but models may not be available")
