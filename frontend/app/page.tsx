@@ -53,15 +53,13 @@ export default function Home() {
 
       {/* ── Hero Section ── */}
       <section className="relative min-h-screen flex items-center justify-center pt-24 pb-12">
-        {/* DarkVeil WebGL background */}
-        <div className="absolute inset-0 -z-10">
+        {/* Aurora WebGL background */}
+        <div className="absolute inset-0 -z-10 bg-[#050008]">
           <DarkVeil
-            hueShift={0}
-            noiseIntensity={0}
-            scanlineIntensity={0}
-            speed={0.5}
-            scanlineFrequency={0}
-            warpAmount={0}
+            colorStops={['#3b0764', '#c026d3', '#1e1b4b']}
+            amplitude={1.4}
+            blend={0.6}
+            speed={1.2}
           />
         </div>
         {/* Fade bottom edge into page */}
